@@ -5,7 +5,7 @@ import io
 from PIL import Image
 
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
-VISION_MODEL = "llava"  # Replace with your Ollama multimodal model
+VISION_MODEL = "llava:7b"  # Replace with your Ollama multimodal model
 
 def capture_screen():
     with mss.mss() as sct:
