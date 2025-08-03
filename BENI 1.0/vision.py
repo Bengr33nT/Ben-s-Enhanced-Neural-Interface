@@ -1,56 +1,48 @@
-import mss
 import base64
-import requests
 import io
-from PIL import Image
+import json
+import random
+import time
+import threading
+import requests
+from PIL import ImageGrab
 
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
-VISION_MODEL = "llava:7b"  # Replace with your Ollama multimodal model
+VISION_MODEL = "llava:7b"
 
 def capture_screen():
-    with mss.mss() as sct:
-        monitor = sct.monitors[1]
-        screenshot = sct.grab(monitor)
-        img = Image.frombytes("RGB", screenshot.size, screenshot.bgra, "raw", "BGRX")
-        buffer = io.BytesIO()
-        img.save(buffer, format="PNG")
-        return buffer.getvalue()
+    img = ImageGrab.grab()
+    buffer = io.BytesIO()
+    img.save(buffer, format="PNG")
+    return buffer.getvalue()
 
-def analyze_screen(user_instruction):
-    image_data = capture_screen()
-    b64_image = base64.b64encode(image_data).decode()
+def analyze_screen(prompt="Describe what you see."):
+    image_bytes = capture_screen()
+    b64_image = base64.b64encode(image_bytes).decode()
 
-    prompt = f"""
-    You are Ben, a rude, sarcastic AI that controls a computer. 
-    Instruction: "{user_instruction}"
-    Current screen image is provided.
-    If this is a command to operate the computer, output JSON:
-    {{
-      "type": "task",
-      "actions": [{{"action": "...", "x": 0, "y": 0, "text": "..."}}]
-    }}
-    If it's just chat, output JSON:
-    {{
-      "type": "chat",
-      "response": "your rude reply"
-    }}
-    """
+    payload = {
+        "model": VISION_MODEL,
+        "prompt": prompt,
+        "images": [b64_image]
+    }
+    response = requests.post(OLLAMA_URL, json=payload, stream=True)
 
-    response = requests.post(OLLAMA_URL, json={
-    "model": VISION_MODEL,
-    "prompt": prompt,
-    "images": [b64_image]
-    }, stream=True)
-
-    output = ""
+    result = ""
     for line in response.iter_lines(decode_unicode=True):
         if line.strip():
             try:
                 j = json.loads(line)
                 if "response" in j:
-                    output += j["response"]
+                    result += j["response"]
             except:
-                output += line
-    return output.strip()
+                result += line
+    return result.strip()
 
-
+# Random commentary thread
+COMMENTARY = True
+def random_commentary(callback):
+    while COMMENTARY:
+        time.sleep(random.randint(120, 300))  # every 2–5 min
+        desc = analyze_screen("Summarize what is happening.")
+        comment = f"So... {desc.lower()}. Should I help you with that?"
+        callback(comment)

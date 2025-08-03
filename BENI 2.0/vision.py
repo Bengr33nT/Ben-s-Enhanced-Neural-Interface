@@ -8,7 +8,7 @@ import requests
 from PIL import ImageGrab
 
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
-VISION_MODEL = "llava"
+VISION_MODEL = "llava:7b"
 
 def capture_screen():
     img = ImageGrab.grab()

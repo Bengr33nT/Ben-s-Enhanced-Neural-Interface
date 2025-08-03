@@ -8,7 +8,10 @@ import pygame
 from gtts import gTTS
 
 # --- Initialization ---
-model = vosk.Model("vosk-model")  # Your Vosk model folder
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "vosk-model")
+model = vosk.Model(MODEL_PATH)
+
 recognizer = vosk.KaldiRecognizer(model, 16000)
 pygame.mixer.init()
 
@@ -48,3 +51,6 @@ def listen():
                 stream.close()
                 p.terminate()
                 return text
+            
+            
+print("Loading Vosk model from:", MODEL_PATH)

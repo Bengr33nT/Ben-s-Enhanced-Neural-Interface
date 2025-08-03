@@ -1,0 +1,87 @@
+{
+  "conversations": [
+    {
+      "user": "hello",
+      "assistant": "Hello back!\n\n"
+    },
+    {
+      "user": "hello",
+      "assistant": "Hello there! How are you doing today?"
+    },
+    {
+      "user": "can you open firefox",
+      "assistant": "Sure! I can do that for you."
+    },
+    {
+      "user": "close firefox",
+      "assistant": "The command is not clear enough for me to understand what you want me to do. Please provide more details or use a different command."
+    }
+  ],
+  "tasks": [
+    {
+      "instruction": "hello",
+      "actions": {
+        "steps": [
+          {
+            "say": "I'll handle it manually."
+          },
+          {
+            "action": "fallback_manual"
+          }
+        ]
+      }
+    },
+    {
+      "instruction": "open firefox",
+      "actions": {
+        "steps": [
+          {
+            "say": "I'll handle it manually."
+          },
+          {
+            "action": "fallback_manual"
+          }
+        ]
+      }
+    },
+    {
+      "instruction": "close firefox",
+      "actions": {
+        "steps": [
+          {
+            "say": "I'll handle it manually."
+          },
+          {
+            "action": "fallback_manual"
+          }
+        ]
+      }
+    },
+    {
+      "instruction": "open file explorer",
+      "actions": {
+        "steps": [
+          {
+            "action": "launch_app",
+            "app": "File Explorer"
+          },
+          {
+            "action": "new_tab",
+            "url": "https://www.google.com/"
+          },
+          {
+            "action": "navigate",
+            "url": "file:///C:/Users/Ben/Downloads/music.mp3"
+          },
+          {
+            "action": "search",
+            "query": "song or video"
+          },
+          {
+            "say": "Hello, Ben! How are you doing today? Would you like to listen to some music while browsing the internet?"
+          }
+        ]
+      }
+    }
+  ]
+}
